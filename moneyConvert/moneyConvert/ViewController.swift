@@ -8,33 +8,49 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var currencySegment: UISegmentedControl!
-    
+ 
     @IBOutlet weak var sourceMoneyField: UITextField!
+    
+    @IBOutlet weak var explainStringLabel: UILabel!
     
     @IBOutlet weak var targetMoneyLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func sourceMoneyFieldDidChange(_ sender: UITextField) { // 숫자가 입력 됐을 때, 지워 졌을 때, 두 경우
+       
+        if sourceMoneyField.text != "" {
+            calculate()
+        } else {
+            makeZero()
+        }
+    }
+    
+    @IBAction func currencyChagned(_ sender: UISegmentedControl) {
+        calculate()
+    }
 
-    @IBAction func convertMoney(_ sender: UIButton) {
-        
+    
+    @objc func calculate() {
+
         guard let sourceCurrency = Currency(rawValue: currencySegment.selectedSegmentIndex) else {
             print("source Currency Error")
             return
         }
         
         guard let sourceAmount = Double(sourceMoneyField.text!) else {
-            sourceMoneyField.text = "Error"
+            sourceMoneyField.text = ""
             return
         }
         
@@ -46,10 +62,20 @@ class ViewController: UIViewController {
             targetMoneyString += sourceMoney.valueInCurrency(currency: Currency.init(rawValue: i)!)
             targetMoneyString += "\r\n"
         }
-        
         targetMoneyLabel.text = targetMoneyString
+        
+        explainStringLabel.text = sourceMoney.explainString(moneyText: sourceMoneyField.text!, currency: Currency.init(rawValue: currencySegment.selectedSegmentIndex)!)
     }
+    
+    func makeZero() {
+        sourceMoneyField.text = "0"
+        calculate()
+    }
+
 }
+
+
+
 
 
 

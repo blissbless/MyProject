@@ -29,25 +29,32 @@ enum Currency: Int {
         get {
             switch self {
             case .USD : return "$"
-            case .KRW : return "W"
-            case .JPY : return "Y"
-            case .EUR : return "E"
+            case .KRW : return "￦"
+            case .JPY : return "￥"
+            case .EUR : return "€"
             }
         }
     }
     
-//    func symbolStr() -> String {
-//        switch self {
-//        case .USD : return "$"
-//        case .KRW : return "W"
-//        case .JPY : return "Y"
-//        case .EUR : return "E"
-//        }
-//    }
+    var currencyStr: String {
+        get {
+            switch self {
+            case .USD:
+                return "US Dollar"
+            case .KRW:
+                return "South Korean Won"
+            case .JPY:
+                return "Japanese Yen"
+            case .EUR:
+                return "Euro"
+            }
+        }
+    }
+    
 }
 
 struct Money {
-    var moneyInput: Double = 0.0
+    private var moneyInput: Double = 0.0
     
     init(_ moneyInput: Double) {
         self.moneyInput = moneyInput
@@ -57,25 +64,16 @@ struct Money {
         self.moneyInput = amount / currency.ratio
     }
     
-//    func example() {
-//        let c1: Currency = .JPY
-//
-//        let sy1 = c1.symbol
-//        let sy2 = c1.symbolStr()
-//
-//        if sy1 == sy2 {
-//            print("SAME!!")
-//        }
-    
-    
-    func valueInCurrency(currency: Currency) -> String { // 화폐종류 받아서 [화폐 심볼 + 금액*ratio] 계산 하여 리턴
+    func valueInCurrency(currency: Currency) -> String {
         return "\(currency.symbol)" + "\(moneyInput * currency.ratio)"
     }
     
+    func explainString(moneyText: String, currency: Currency) -> String {
+        return "\(moneyText) " + "\(currency.currencyStr)" + " equals"
+
+    }
 }
 
-//let myMoney: Money = Money(120)
-//let myMoneyWon: Money = Money(350_000, currency: .KRW)
 
 
 
